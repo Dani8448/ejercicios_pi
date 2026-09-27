@@ -10,12 +10,13 @@
         name: "{{ item }}"
         state: present
       loop:
-        # Aquí tienes que poner los paquetes que quieres instalar
+        - apache2
+        - git
       # Copia un fichero a la máquina remota
     - name: "Copiar fichero a la máquina remota"
       copy:
         src: files/foo.conf
-        dest:
+        dest: /etc
         owner: root
         group: root
         mode: '0644'
@@ -24,7 +25,7 @@
     - name: "Copiar un template a un fichero de la máquina remota"
       template:
         src: templates/index.j2
-        dest:
+        dest: /var/www/html/index.html
         owner: www-data
         group: www-data
         mode: 0644
@@ -34,6 +35,7 @@
       community.mysql.mysql_db:
         name: "{{ bd_name }}"
         state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
 
       # Crear usuario de base de datos
     - name: "Crear usuario de base de datos"
@@ -42,3 +44,5 @@
         password: "{{ bd_pass }}"
         priv: "{{ bd_name }}.*:ALL"
         state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
